@@ -3,7 +3,7 @@ unit game;
 interface
 
 uses
-    snake, screen, crt;
+    snake, screen, crt, sysutils;
 
 type
     TGame = class
@@ -43,32 +43,48 @@ var
     c: char;
     n: TSnakeCoord; // New head/tail coord.
     step: DWORD = 0;
+    score: integer = 0;
     speed: integer = 5;
     growth: boolean;
     playing: boolean = true;
+    direction: byte = BTN_RIGHT;
 begin
     screen.status('Welcome to the snake!', '');
     repeat
+        screen.status('', 'Speed: ' + IntToStr(speed) +
+            ' | Score: ' + IntToStr(score));
         screen.cursor(screen.max.x, 1);
         delay(1000 div (speed * speed));
         while screen.has_input do begin
             c := screen.input;
             case ord(c) of
                 BTN_LEFT, ord('a'): begin
-                    snake.vec.x := -1;
-                    snake.vec.y := 0;
+                    if direction <> BTN_RIGHT then begin
+                        snake.vec.x := -1;
+                        snake.vec.y := 0;
+                    end;
+                    direction := BTN_LEFT;
                 end;
                 BTN_UP, ord('w'): begin
-                    snake.vec.x := 0;
-                    snake.vec.y := -1;
+                    if direction <> BTN_DOWN then begin
+                        snake.vec.x := 0;
+                        snake.vec.y := -1;
+                    end;
+                    direction := BTN_UP;
                 end;
                 BTN_RIGHT, ord('d'): begin
-                    snake.vec.x := 1;
-                    snake.vec.y := 0;
+                    if direction <> BTN_LEFT then begin
+                        snake.vec.x := 1;
+                        snake.vec.y := 0;
+                    end;
+                    direction := BTN_RIGHT;
                 end;
                 BTN_DOWN, ord('s'): begin
-                    snake.vec.x := 0;
-                    snake.vec.y := 1;
+                    if direction <> BTN_UP then begin
+                        snake.vec.x := 0;
+                        snake.vec.y := 1;
+                    end;
+                    direction := BTN_DOWN;
                 end;
                 $31..$39: speed := ord(c) - $30;
                 ord('r'): begin
