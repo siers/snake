@@ -3,7 +3,7 @@ unit screen;
 interface
 
 uses
-    crt, snake;
+    crt, snake, sysutils;
 
 type
     TScreen = class
@@ -11,6 +11,7 @@ type
         procedure   pixel(x, y: integer; c: char = '#'); overload;
         procedure   pixel(p: TCoord; c: char = '#'); overload;
         procedure   cursor(x, y: integer);
+        procedure   status(left, right: string);
         function    has_input: boolean;
         function    input: char;
         function    max: TCoord;
@@ -23,6 +24,18 @@ constructor TScreen.create;
 begin
     clrscr;
     cursoroff;
+end;
+
+procedure TScreen.status(left, right: string);
+begin
+    if left <> '' then begin
+        cursor(1, 1);
+        write(format('%-30s', [left]));
+    end;
+    if right <> '' then begin
+        cursor(max.x - 30, 1);
+        write(format('%30s', [right]));
+    end;
 end;
 
 procedure TScreen.pixel(x, y: integer; c: char = '#');
@@ -39,6 +52,7 @@ end;
 
 procedure TScreen.cursor(x, y: integer);
 begin
+    GotoXY(x, y);
 end;
 
 function TScreen.has_input: boolean;
