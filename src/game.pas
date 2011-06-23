@@ -13,7 +13,7 @@ type
         food:   TObstacle;
         bounds: TBoundaries;
         constructor create;
-        procedure   run;
+        function    run: boolean;
         destructor  destroy; override;
     end;
 
@@ -38,7 +38,7 @@ begin
     screen.pixel(beginning);
 end;
 
-procedure TGame.run;
+function TGame.run: boolean;
 var
     c: char;
     n: TSnakeCoord; // New head/tail coord.
@@ -47,7 +47,9 @@ var
     growth: boolean;
     playing: boolean = true;
 begin
+    screen.status('Welcome to the snake!', '');
     repeat
+        screen.cursor(screen.max.x, 1);
         delay(1000 div (speed * speed));
         while screen.has_input do begin
             c := screen.input;
@@ -69,6 +71,10 @@ begin
                     snake.vec.y := 1;
                 end;
                 $31..$39: speed := ord(c) - $30;
+                ord('r'): begin
+                    result := false;
+                    exit;
+                end;
             end;
         end;
         if playing then begin
@@ -77,6 +83,7 @@ begin
             n := snake.move(growth);
             if bounds.interferes(n.head) or snake.is_snake(n.head) then begin
                 playing := false;
+                screen.status('You lost! Press q to exit or r to restart,', '');
             end else begin
                 screen.pixel(n.head);
                 if not growth then
@@ -84,6 +91,7 @@ begin
             end;
         end;
     until c = 'q';
+    result := true;
 end;
 
 destructor TGame.destroy;

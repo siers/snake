@@ -7,9 +7,11 @@ uses
 
 var
     g: TGame;
-
+    die: boolean;
 begin
-    g := TGame.Create;
-    g.run;
-    g.Free;
+    repeat
+        g := TGame.Create;
+        die := g.run;
+        g.Free;
+    until die;
 end.
