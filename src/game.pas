@@ -35,6 +35,7 @@ begin
     beginning.y := field.y div 2;
     snake       := TSnake.create(beginning);
     bounds      := TBoundaries.create(1, 2, screen.max.x, screen.max.y);
+    food        := TObstacle.create;
     screen.pixel(beginning);
 end;
 
@@ -42,7 +43,9 @@ function TGame.run: boolean;
 var
     c: char;
     n: TSnakeCoord; // New head/tail coord.
+    ate: boolean = true;
     step: DWORD = 0;
+    foodc: TCoord;
     score: integer = 0;
     speed: integer = 5;
     growth: boolean;
@@ -95,8 +98,20 @@ begin
         end;
         if playing then begin
             inc(step);
-            growth := step < 5;
+            growth := (step < 5) or ate;
+            if ate then begin
+                repeat
+                    foodc.x := random(screen.max.x) + 1;
+                    foodc.y := random(screen.max.y - 1) + 2;
+                until not snake.is_snake(foodc);
+                ate := false;
+                screen.pixel(foodc, '.');
+            end;
             n := snake.move(growth);
+            if (n.head.x = foodc.x) and (n.head.y = foodc.y) then begin
+                ate := true;
+                score := score + speed;
+            end;
             if bounds.interferes(n.head) or snake.is_snake(n.head) then begin
                 playing := false;
                 screen.status('You lost! Press q to exit or r to restart,', '');
@@ -115,6 +130,7 @@ begin
     bounds.free;
     screen.free;
     snake.free;
+    food.free;
     inherited;
 end;
 

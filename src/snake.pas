@@ -38,7 +38,8 @@ type
     TObstacle = class
         coord: TCoord;
         otype: obstacle_types;
-        constructor create(c: TCoord);
+        constructor create(); overload;
+        constructor create(c: TCoord); overload;
         function    interferes(c: TCoord): boolean;
     end;
 
@@ -107,6 +108,9 @@ begin
     inherited;
 end;
 
+constructor TObstacle.create;
+begin
+end;
 constructor TObstacle.create(c: TCoord);
 begin
     coord := c;
