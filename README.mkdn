@@ -1,0 +1,8 @@
+*About*
+Snake was made for school, I wouldn't write it in pascal for myself. :]
+
+*What's so awesome about it*
+It has all kinds of OOP shenanigans and abstract obstacle class, but its abstracity wasn't used, because I was too lazy to, but it works. :]
+
+_*Sidenote*_
+Love you all, lemondrops.
